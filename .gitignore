@@ -1,0 +1,6 @@
+variance_*
+*.nc
+*.gmp
+*.ctl
+*.grb
+
