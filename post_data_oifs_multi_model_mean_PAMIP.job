@@ -4,8 +4,8 @@ set -x
 
 
 cd /mnt/lustre01/work/ba1035/a270092/postprocessing/PAMIP
-exp1="11"
-exp2="16"
+exp1="12"
+exp2="13"
 var="z500"
 string=ensmean
 level=50000
@@ -17,6 +17,10 @@ do
 	do
 		cdo cat ${res}_${var}_${season}_${exp2}-${exp1}_${string}_${level}Pa.nc mmcat_${var}_${season}_${exp2}-${exp1}_${string}_${level}Pa.nc 
 	done
+
+	cdo cat T63_${var}_${season}_${exp2}-${exp1}_${string}_${level}Pa_prelim.nc mmcat_${var}_${season}_${exp2}-${exp1}_${string}_${level}Pa.nc
+        cdo cat T127_${var}_${season}_${exp2}-${exp1}_${string}_${level}Pa_prelim.nc mmcat_${var}_${season}_${exp2}-${exp1}_${string}_${level}Pa.nc
+
 	cdo timmean mmcat_${var}_${season}_${exp2}-${exp1}_${string}_${level}Pa.nc mmm_${var}_${season}_${exp2}-${exp1}_${string}_${level}Pa.nc 
 	rm mmcat_${var}_${season}_${exp2}-${exp1}_${string}_${level}Pa.nc
 done
