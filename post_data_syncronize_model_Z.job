@@ -4,10 +4,10 @@ set -x
 
 
 cd /mnt/lustre01/work/ba1035/a270092/postprocessing/PAMIP
-exp1="12"
-exp2="13"
-exp1_prelim="ii"
-exp2_prelim="si"
+exp1="11"
+exp2="16"
+exp1_prelim="pi"   #p1=11  ii=12  si=13  ai=15  af=16 
+exp2_prelim="af"
 vars_echam="Z_V_MSLP"
 vars_oifs="z500"
 string=ensmean
