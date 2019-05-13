@@ -63,7 +63,7 @@ do
 				cdo selvar,${vars_echam_internal} ${res}_${vars_echam}_${season}_${exp2}-${exp1}_${string}.nc ${res}_${vars_echam}_${season}_${exp2}-${exp1}_${string}_${vars_echam_internal}.nc
 				rm ${res}_${vars_echam}_${season}_${exp2}-${exp1}_${string}.nc
 
-				cdo chname,${vars_echam_internal},${vars_oifs ${res}_${vars_echam}_${season}_${exp2}-${exp1}_${string}_${vars_echam_internal}.nc ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc
+				cdo chname,${vars_echam_internal},${vars_oifs} ${res}_${vars_echam}_${season}_${exp2}-${exp1}_${string}_${vars_echam_internal}.nc ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc
 				rm ${res}_${vars_echam}_${season}_${exp2}-${exp1}_${string}_${vars_echam_internal}.nc
 			done
 		fi
@@ -81,9 +81,12 @@ do
 
 				cdo -r setcalendar,standard ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc tmp.nc
 		  		mv tmp.nc ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc
+				
+				cdo sellevel,100000,92500,85000,70000,50000,40000,30000,25000,20000,10000,5000,1000,100 ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc tmp.nc
+				mv tmp.nc ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc
 
-				cdo remapbil,r180x91 ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc
-				rm ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc
+				cdo remapbil,r180x91 ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc tmp.nc
+				mv tmp.nc ${res}_${vars_oifs}_${season}_${exp2}-${exp1}_${string}.nc
 			done
 		fi
 	done
