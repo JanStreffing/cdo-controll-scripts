@@ -17,7 +17,7 @@ string=ensmean
 ###################################
 #         Preparation		  #
 ###################################
-for model in echam_prelim echam oifs 
+for model in oifs #echam_prelim echam oifs 
 do
 	printf "=========================================="
 	printf "working on model" $model
@@ -72,7 +72,7 @@ do
 		fi
 		if [ "$model" == "oifs" ]
 		then
-			for res in T159 T511
+			for res in T511 #T159 T511
 			do
 				path1="/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/$res/Experiment_${exp1}/ensemble_mean"
 				path2="/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/$res/Experiment_${exp2}/ensemble_mean"

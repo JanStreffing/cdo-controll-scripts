@@ -3,4 +3,7 @@ variance_*
 *.gmp
 *.ctl
 *.grb
-
+nohup.out
+slurm-*
+*~
+.Rhistory

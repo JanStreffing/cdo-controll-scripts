@@ -4,11 +4,11 @@ set -x
 
 
 cd /mnt/lustre01/work/ba1035/a270092/postprocessing/PAMIP
-exp1="11"
-exp2="16"
+exp1="12"
+exp2="13"
 var="T2M"
 
-for res in T63 T127 T159 T511
+for res in T511
 do
 	cdo cat ${res}_${var}_DJF_${exp2}-${exp1}_ensmean.nc ${res}_${var}_SON_${exp2}-${exp1}_ensmean.nc ${res}_${var}_MAM_${exp2}-${exp1}_ensmean.nc ${res}_${var}_JJA_${exp2}-${exp1}_ensmean.nc ${res}_${var}_cat_${exp2}-${exp1}_ensmean.nc 
 

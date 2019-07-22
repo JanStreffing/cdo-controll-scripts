@@ -1,12 +1,12 @@
 #! /bin/bash
 set -x
 
-vars="V"	   	    #U V
-input_res='T511' 	    #T511 T159 T127 T63
-output_res='960x480'	    #960x480 360x180 180x91
+vars="T2M"	   	    #U V
+input_res='T159' 	    #T511 T159 T127 T63
+output_res='180*91'	    #960x480 360x180 180x91
 
 
-for e in {14,16}
+for e in 11 12 13 16
 do
 	cd /mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/${input_res}/Experiment_$e/ensemble_mean
 	for i in {1..100}

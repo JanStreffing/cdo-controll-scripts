@@ -1,0 +1,32 @@
+#!/bin/bash
+#SBATCH -J NNs              # Specify job name
+#SBATCH -p prepost             # Use partition prepost
+#SBATCH -N 1                   # Specify number of nodes
+#SBATCH -n 1                   # Specify max. number of tasks to be invoked
+#SBATCH -t 07:50:00                  # Set a limit on the total run time
+#SBATCH -A bm0944              # Charge resources on this project account
+#SBATCH -o NNs.o%j          # File name for standard output
+#SBATCH -e NNs.e%j          # File name for standard error output
+
+set -exu
+
+exp=4aab
+yearrange=2071_2100
+res=t63
+
+mkdir -p ../sinuosity
+
+vars="Z500"
+
+for var in ${vars}; do
+
+  dir=/work/bk0988/awicm/a270062/cpl_output_T63core_${exp}_PI_ATMO_${yearrange}
+  cd $dir
+  cdo invertlat -daymean -sellevel,50000 -selcode,156 ${var}_${yearrange}_3hourly.nc zg500_daily.nc
+  ncatted -a calendar,time,o,c,"standard" zg500_daily.nc
+  cd /pf/a/a270062/APPLICATE_diag/APPLICATE/sinuosity
+  ./sinuosity ${dir}/zg500_daily.nc ${dir}/../sinuosity_${exp}_${yearrange}
+
+done # var
+exit 0
+
