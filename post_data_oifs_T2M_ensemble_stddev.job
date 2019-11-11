@@ -10,14 +10,14 @@ set -x
 vars="T2M"
 vars_echam="T2M"
 vars_echam_internal="temp2"	   
-exp1=13
+exp1=11
 exp1_prelim="af"   #p1=11  ii=12  si=13  ai=15  af=16 
 tempdir=/mnt/lustre01/work/ba1035/a270092/postprocessing/PAMIP/large/
 
 ###################################
 #         Preparation		  #
 ###################################
-for model in oifs echam
+for model in oifs #echam
 do
 	printf "=========================================="
 	printf "working on model" $model
@@ -33,7 +33,7 @@ do
 				printf "   ====================================================="
 				printf "   Processing Experiment id $i"
 				printf "   ====================================================="
-		    		cdo remapbil,r180x91 ${path1}/E$(printf "%03g" $i)//outdata/oifs/seasonal_mean/${vars}_seasmean.nc $tempdir/${res}_${vars}_${exp1}_$(printf "%03g" $i).nc
+		    		cdo remapbil,r360x160 ${path1}/E$(printf "%03g" $i)//outdata/oifs/seasonal_mean/${vars}_seasmean.nc $tempdir/${res}_${vars}_${exp1}_$(printf "%03g" $i).nc
 				cdo splitseas $tempdir/${res}_${vars}_${exp1}_$(printf "%03g" $i).nc  $tempdir/${res}_${vars}_${exp1}_$(printf "%03g" $i)_
 				for seasons in DJF SON MAM JJA
 				do

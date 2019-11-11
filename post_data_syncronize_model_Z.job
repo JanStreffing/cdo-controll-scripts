@@ -2,10 +2,10 @@
 set -x
 
 
-
+startdir=`pwd`
 cd /mnt/lustre01/work/ba1035/a270092/postprocessing/PAMIP
-exp1="11"
-exp2="16"
+exp1="12"
+exp2="13"
 exp1_prelim="p1"   #p1=11  ii=12  si=13  ai=15  af=16 
 exp2_prelim="af"
 vars_echam="Z_V_MSLP"
@@ -16,7 +16,7 @@ level=50000
 ###################################
 #         Preparation		  #
 ###################################
-for model in echam echam_prelim oifs 
+for model in echam oifs 
 do
 	for season in DJF MAM JJA SON
 	do
@@ -96,5 +96,7 @@ do
 		fi
 	done
 done
+cd $startdir
+./post_data_oifs_multi_model_mean_PAMIP_Z.job $exp2 $exp1
 exit 0
 
