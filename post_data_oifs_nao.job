@@ -1,0 +1,55 @@
+#! /bin/bash
+#!/bin/ksh
+#SBATCH --job-name=OPP
+#SBATCH -p prepost
+#SBATCH --time=08:00:00
+#SBATCH -A ba1035
+
+set -x
+
+###################################
+#         Preparation		  #
+###################################
+
+for vars in MSL # U
+do
+	for res in T159
+	do
+		for exp1 in 11 16
+		do
+			path1="/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/$res/Experiment_${exp1}/"
+			for i in {1..100}
+			do
+				echo "   ====================================================="
+				echo "   Processing Experiment id $i"
+				echo "   ====================================================="
+				if [[ $res == 'T159' ]]; then
+					file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001.nc "
+				elif [[ $res == 'T511' ]]; then
+					for n in {2..7}
+					do
+						file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/0000${n}/MSL_0000${n}.nc "
+					done
+				fi
+			done
+			mkdir $path1/nao
+			cd  $path1/nao
+                        rm MSL_hourly_all_ens.nc
+			printf $file_name_string
+			#cdo cat $file_name_string MSL_hourly_all_ens.nc
+                        #cdo sellonlatbox,-90,40,20,80 MSL_hourly_all_ens.nc MSL_hourly_all_ens_box.nc
+			#cdo timmean MSL_hourly_all_ens_box.nc MSL_timmean.nc
+			#cdo sub MSL_hourly_all_ens_box.nc MSL_timmean.nc MSL_detrend.nc
+			#cdo monmean MSL_detrend.nc MSL_detrend_mon.nc
+			#cdo eof,2 MSL_detrend_mon.nc NAO_eigenvalues.nc NAO_eigenvectors.nc
+			cdo seltimestep,2 NAO_eigenvectors.nc NAO_eigenvector2.nc
+        	        unset file_name_string
+		done
+	done
+	cdo add /mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/$res/Experiment_11/nao/NAO_eigenvector2.nc /mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/$res/Experiment_16/nao/NAO_eigenvector2.nc /mnt/lustre01/work/ba1035/a270092/postprocessing/PAMIP/nao_${res}_11-16.nc
+done
+cd $tempdir
+
+
+
+
