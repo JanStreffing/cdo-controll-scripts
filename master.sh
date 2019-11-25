@@ -7,7 +7,7 @@ dir='/p/largedata/hhb19/jstreffi/runtime/oifsamip/'
 
 for e in {11,16}
 do
-	for var in 'z500 U MSL T2M SD SF'
+	for var in z500 U MSL T2M SD SF
 	do
 		./prep_for_scripts.sh $e $start $end $res $var $dir
 		if [ "$var" == "z500" ]
@@ -22,7 +22,7 @@ end=40
 
 for e in {11,16}
 do
-	for var in 'z500 U MSL T2M SD SF'
+	for var in z500 U MSL T2M SD SF
 	do
 		./mean_for_scripts.sh $e $start $end $res $var $dir
 		./split_to_seasons.sh $e $start $end $res $var $dir

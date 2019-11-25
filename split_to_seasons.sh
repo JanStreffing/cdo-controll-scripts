@@ -13,10 +13,7 @@ dir=$6
 
 
 echo "   ====================================================="
-echo "   Processing Experiment $e"
-echo "   ====================================================="
-echo "   ====================================================="
-echo "   Processing Variable $p"
+echo "   Splitting Experiment $e", Variable $p into seasonal
 echo "   ====================================================="
 
 for i in `seq $2 $3`

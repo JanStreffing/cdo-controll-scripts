@@ -14,10 +14,10 @@ dir=$6
 for i in {${start}..${end}}
 do
   echo "   ====================================================="
-  echo "   Calculating seasonal mean values for E$(printf "%03g" i)"
+  echo "   prep seasonal mean values for E$(printf "%03g" i)"
   echo "   ====================================================="
   printf $dir
-  mkdir $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/seasonal_mean
+#  mkdir $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/seasonal_mean
   cd $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/seasonal_mean
   pwd
   for p in $var

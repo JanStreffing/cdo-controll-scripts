@@ -13,7 +13,7 @@ dir=$6
 
 
   echo "   ====================================================="
-  echo "   Processing Experiment $e"
+  echo "   Calculating ens mean for Experiment $e", Var $var
   echo "   ====================================================="
   mkdir $dir/$res/Experiment_${e}/ensemble_mean
   for p in $var

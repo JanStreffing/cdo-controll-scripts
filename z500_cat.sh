@@ -16,12 +16,12 @@ dir=$6
 cd $dir/$res/Experiment_$e
 pwd
 echo "   ====================================================="
-echo "   Processing Experiment $e"
+echo "   Cat z500 for Experiment $e"
 echo "   ====================================================="
 for i in {$2..$3}
 do
 	echo "   ====================================================="
-	echo "   Calculating seasonal mean values for E$(printf "%03g" i)"
+	echo "   Cat z500 for run E$(printf "%03g" i)"
 	echo "   ====================================================="
 	rm -rf E$(printf "%03g" i)/outdata/oifs/z500_6hourly
 	mkdir E$(printf "%03g" i)/outdata/oifs/z500_6hourly

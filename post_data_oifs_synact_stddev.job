@@ -24,7 +24,7 @@ path1=$dir/$res/Experiment_${exp1}/synact/
 for i in {${2}..${3}}
 do
 	echo "====================================================="
-	echo "Processing Experiment id $i"
+	echo "Synact for Experiment $i"
 	echo "====================================================="
 	for seasons in DJF SON MAM JJA
 	do
