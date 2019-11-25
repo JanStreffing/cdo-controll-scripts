@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/ksh
 #SBATCH -J NNN              # Specify job name
 #SBATCH -p prepost             # Use partition prepost
 #SBATCH -N 1                   # Specify number of nodes
@@ -10,30 +10,32 @@
 
 set -exu
 
-res=T511
+e=$1
+start=$2
+end=$3
+res=$4
+var=$5
+dir=$6
+
+
 startyear=2000
 endyear=2001
 
-for exp in 11 12 13 16
+for i in {${start}..${end}}
 do
-        for expn in {1..100}
-        do
-                echo $(printf "%03g" ${expn})
-                origdir=/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/${res}/Experiment_${exp}/E$(printf "%03g" $expn)/outdata/oifs/z500_6hourly
-                cd $origdir
-		mv z500_6hourly.nc 3D_$(printf "%03g" ${expn})_6hourly.nc
-                cdo shifttime,1day 3D_$(printf "%03g" ${expn})_6hourly.nc 3D_$(printf "%03g" ${expn})_6hourly_shifttime.nc
-                cdo splitseas 3D_$(printf "%03g" ${expn})_6hourly_shifttime.nc 3D_$(printf "%03g" ${expn})_6hourly_shifttime_
-                cdo splitseas 3D_$(printf "%03g" ${expn})_6hourly.nc 3D_$(printf "%03g" ${expn})_6hourly_
+	cd $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/z500_6hourly
+	mv z500_6hourly.nc 3D_$(printf "%03g" ${i})_6hourly.nc
+	cdo shifttime,1day 3D_$(printf "%03g" ${i})_6hourly.nc 3D_$(printf "%03g" ${i})_6hourly_shifttime.nc
+	cdo splitseas 3D_$(printf "%03g" ${i})_6hourly_shifttime.nc 3D_$(printf "%03g" ${i})_6hourly_shifttime_
+	cdo splitseas 3D_$(printf "%03g" ${i})_6hourly.nc 3D_$(printf "%03g" ${i})_6hourly_
 
-                cdo seldate,${startyear}-06-02,${startyear}-08-31 3D_$(printf "%03g" ${expn})_6hourly_shifttime_JJA.nc 3D_$(printf "%03g" ${expn})_6hourly_shifttime_JJA_temp.nc && mv 3D_$(printf "%03g" ${expn})_6hourly_shifttime_JJA_temp.nc 3D_$(printf "%03g" ${expn})_6hourly_shifttime_JJA.nc
-                cdo seldate,${startyear}-06-02,${startyear}-08-31 3D_$(printf "%03g" ${expn})_6hourly_JJA.nc 3D_$(printf "%03g" ${expn})_6hourly_JJA_temp.nc && mv 3D_$(printf "%03g" ${expn})_6hourly_JJA_temp.nc 3D_$(printf "%03g" ${expn})_6hourly_JJA.nc
+	cdo seldate,${startyear}-06-02,${startyear}-08-31 3D_$(printf "%03g" ${i})_6hourly_shifttime_JJA.nc 3D_$(printf "%03g" ${i})_6hourly_shifttime_JJA_temp.nc && mv 3D_$(printf "%03g" ${i})_6hourly_shifttime_JJA_temp.nc 3D_$(printf "%03g" ${i})_6hourly_shifttime_JJA.nc
+	cdo seldate,${startyear}-06-02,${startyear}-08-31 3D_$(printf "%03g" ${i})_6hourly_JJA.nc 3D_$(printf "%03g" ${i})_6hourly_JJA_temp.nc && mv 3D_$(printf "%03g" ${i})_6hourly_JJA_temp.nc 3D_$(printf "%03g" ${i})_6hourly_JJA.nc
 
-                for season in DJF MAM JJA SON
-                do
-                        cdo sub 3D_$(printf "%03g" ${expn})_6hourly_${season}.nc 3D_$(printf "%03g" ${expn})_6hourly_shifttime_${season}.nc 3D_$(printf "%03g" ${expn})_6hourly_diff_${season}.nc
-                        cdo timstd 3D_$(printf "%03g" ${expn})_6hourly_diff_${season}.nc 3D_$(printf "%03g" ${expn})_timstd_${season}.nc
-                done
-        done
+	for season in DJF MAM JJA SON
+	do
+		cdo sub 3D_$(printf "%03g" ${i})_6hourly_${season}.nc 3D_$(printf "%03g" ${i})_6hourly_shifttime_${season}.nc 3D_$(printf "%03g" ${i})_6hourly_diff_${season}.nc
+		cdo timstd 3D_$(printf "%03g" ${i})_6hourly_diff_${season}.nc 3D_$(printf "%03g" ${i})_timstd_${season}.nc
+	done
 done
 exit

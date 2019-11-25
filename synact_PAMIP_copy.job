@@ -1,3 +1,4 @@
+#!/bin/bash
 #SBATCH -J NNN              # Specify job name
 #SBATCH -p prepost             # Use partition prepost
 #SBATCH -N 1                   # Specify number of nodes
@@ -9,28 +10,26 @@
 
 set -exu
 
-res=T511
+expn=$1
+res=T1279
 startyear=2000
 endyear=2001
 
-for exp in 11 12 13 16
-do
-        newdir=/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/${res}/Experiment_${exp}/synact
-        rm -rf ${newdir}
-        mkdir ${newdir}
+newdir=/p/largedata/hhb19/jstreffi//runtime/oifsamip/${res}/Experiment_${exp}/synact
+rm -rf ${newdir}
+mkdir ${newdir}
 
-        for expn in {1..100}
-        do
-                echo $(printf "%03g" ${expn})
-                origdir=/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/${res}/Experiment_${exp}/E$(printf "%03g" $expn)/outdata/oifs/z500_6hourly
-                for season in DJF MAM JJA SON
-                do
-			cp ${origdir}/3D_$(printf "%03g" ${expn})_timstd_${season}.nc ${newdir}/3D_$(printf "%03g" ${expn})_timstd_${season}.nc
-                done
-        done
+for expn in {${2}..${3}}
+do
+	echo $(printf "%03g" ${expn})
+	origdir=/p/largedata/hhb19/jstreffi//runtime/oifsamip/${res}/Experiment_${exp}/E$(printf "%03g" $expn)/outdata/oifs/z500_6hourly
 	for season in DJF MAM JJA SON
-        do
-        	cdo ensmean ${newdir}/3D_*_timstd_${season}.nc ${newdir}/3D_timstd_${season}.nc
+	do
+		cp ${origdir}/3D_$(printf "%03g" ${expn})_timstd_${season}.nc ${newdir}/3D_$(printf "%03g" ${expn})_timstd_${season}.nc
 	done
+done
+for season in DJF MAM JJA SON
+do
+	cdo ensmean ${newdir}/3D_*_timstd_${season}.nc ${newdir}/3D_timstd_${season}.nc
 done
 exit
