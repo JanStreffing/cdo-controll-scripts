@@ -15,10 +15,12 @@ dir=$6
 
 
 path1=$dir/$res/Experiment_${exp1}/
+
+# Select all surface pressure files
 for i in {${start}..${end}}
 do
 	echo "   ====================================================="
-	echo "   Processing Experiment id $i"
+	echo "   Selecting Experiment id $i"
 	echo "   ====================================================="
 	if [[ $res == 'T159' ]]; then
 		file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001.nc "
@@ -35,24 +37,51 @@ do
 
 	fi
 done
+
+# Make work dir
 mkdir $path1/nao
 cd  $path1/nao
+
+# Remove old output if there is any, so that we don't cat to it
 rm MSL_hourly_all_ens.nc
+
+# Cat togethers MSL data
 printf $file_name_string
 cdo cat $file_name_string MSL_hourly_all_ens.nc
+
+# Select NAO box
 cdo sellonlatbox,-90,40,20,80 MSL_hourly_all_ens.nc MSL_hourly_all_ens_box.nc
+
+# Detrend data
 cdo timmean MSL_hourly_all_ens_box.nc MSL_timmean.nc
 cdo sub MSL_hourly_all_ens_box.nc MSL_timmean.nc MSL_detrend.nc
 cdo monmean MSL_detrend.nc MSL_detrend_mon.nc
-cdo daymean MSL_detrend.nc MSL_detrend_day.nc
-cdo monmean -selseas,SON MSL_detrend.nc MSL_detrend_DJF.nc
-cdo -P 8 eof,2 MSL_detrend_DJF.nc NAO_eigenvalues.nc NAO_eigenvectors.nc
-cdo seltimestep,2 NAO_eigenvectors.nc NAO_eigenvector2.nc
-cdo griddes $path1/E001//outdata/oifs/00001/MSL_00001.nc >grid
-cdo enlargegrid,grid -settaxis,2000-01-01,12:00:00,1day NAO_eigenvector2.nc NAO_eigenvector3.nc
-unset file_name_string
-cdo add /mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/$res/Experiment_11/nao/NAO_eigenvector2.nc /mnt/lustre01/work/ba1035/a270092/runtime/oifsamip/$res/Experiment_16/nao/NAO_eigenvector2.nc /mnt/lustre01/work/ba1035/a270092/postprocessing/PAMIP/nao_${res}_11-16.nc
 
+for seas in 'DJF' 'MAM' 'JJA' 'SON'
+do
+	# Select season
+	cdo monmean -selseas,${seas} MSL_detrend.nc MSL_detrend_${seas}.nc
 
+	# Calculate EOF and select NAO
+	cdo -P 8 eof,2 MSL_detrend_${seas}.nc NAO_eigenvalues_${seas}.nc NAO_eigenvectors_${seas}.nc
+	cdo seltimestep,2 NAO_eigenvectors_${seas}.nc NAO_eigenvector2_${seas}.nc
 
+	# Sign coming from EOF is arbitrary but we know pressure in south is > than north.
+	# We use this knowledge to correct the sign if necessary
+	cdo timmean -fldmean -sellonlatbox,-40,-30,30,40 NAO_eigenvector2_${seas}.nc sign_${seas}.nc
+	sign=`ncdump -v MSL sign_${seas}.nc | sed -e '1,/data:/d' -e '$d'`
+	sign2=${sign:7:9}
+	if [[ $(($sign2)) < 0 ]]
+	then
+		cdo mulc,-1 NAO_eigenvector2_${seas}.nc temp
+		mv temp NAO_eigenvector2_${seas}.nc
+	fi
+
+	# Fix grid for plotting. We create a global file again where only the NAO box has values 
+	cdo griddes $path1/E001//outdata/oifs/00001/MSL_00001.nc >grid
+	cdo enlargegrid,grid -settaxis,2000-01-01,12:00:00,1day NAO_eigenvector2_${seas}.nc NAO_eigenvector3_${seas}.nc
+
+	# Clean up
+	rm sign_${seas}.nc grid NAO_eigenvector2_${seas}.nc MSL_detrend_${seas}.nc
+done
 
