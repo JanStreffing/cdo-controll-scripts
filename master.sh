@@ -2,7 +2,7 @@
 
 start=1
 end=100
-res=T159
+res=T511
 dir='/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip'
 
 for e in {11,16}
@@ -11,9 +11,11 @@ do
 	do
 		if [ "$var" == "z500" ]
 		then
-			./z500_cat.sh $e $start $end $res $var $dir
+			printf "z500_cat.sh"
+			#./z500_cat.sh $e $start $end $res $var $dir
 		else
-			./prep_for_scripts.sh $e $start $end $res $var $dir
+			printf "prep_for_scripts.sh"
+			#./prep_for_scripts.sh $e $start $end $res $var $dir
 		fi
 	done
 done
@@ -27,14 +29,17 @@ do
 	do
 		if [ "$var" == "synact" ]
 		then
-			./synact_PAMIP.job $e $start $end $res $var $dir
-  			./post_data_oifs_synact_stddev.job $e $start $end $res $var $dir
+			printf "synact_PAMIP.job"
+			#./synact_PAMIP.job $e $start $end $res $var $dir
+  			#./post_data_oifs_synact_stddev.job $e $start $end $res $var $dir
 		elif [ "$var" == "NAO" ]
 		then
+			printf "post_data_oifs_nao.job"
 	                ./post_data_oifs_nao.job $e $start $end $res $var $dir
 		else
-			./mean_for_scripts.sh $e $start $end $res $var $dir
-			./split_to_seasons.sh $e $start $end $res $var $dir
+			printf "mean_for_scripts.sh"
+			#./mean_for_scripts.sh $e $start $end $res $var $dir
+			#./split_to_seasons.sh $e $start $end $res $var $dir
 		fi
 		
 	done
