@@ -22,3 +22,6 @@ do
 	cdo splitseas $dir/$res/Experiment_$e/E$(printf "%03d" i)/outdata/oifs/seasonal_mean/${p}_seasmean.nc $dir/$res/Experiment_$e/E$(printf "%03d" i)/outdata/oifs/seasonal_mean/${p}_
 done
 cdo splitseas $dir/$res/Experiment_$e/ensemble_mean/${p}_ensmean.nc $dir/$res/Experiment_$e/ensemble_mean/${p}_ensmean_
+if [ $p == 'U' ]; then
+	cdo splitseas $dir/$res/Experiment_$e/ensemble_mean/${p}_ensmean_nh.nc $dir/$res/Experiment_$e/ensemble_mean/${p}_ensmean_nh_
+fi

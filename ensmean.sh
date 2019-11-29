@@ -19,5 +19,8 @@ dir=$6
   for p in $var
   do
     printf "     Working on paramter ${p}\n"
-    cdo ensmean $dir/$res/Experiment_${e}/E[0-1][0-9][0-9]/outdata/oifs/seasonal_mean/${p}_seasmean.nc $dir/$res/Experiment_${e}/ensemble_mean/${p}_ensmean.nc
+    cdo -O ensmean $dir/$res/Experiment_${e}/E[0-1][0-9][0-9]/outdata/oifs/seasonal_mean/${p}_seasmean.nc $dir/$res/Experiment_${e}/ensemble_mean/${p}_ensmean.nc
+    if [ $p == "U" ]; then
+      cdo -O ensmean $dir/$res/Experiment_${e}/E[0-1][0-9][0-9]/outdata/oifs/seasonal_mean/${p}_seasmean_nh.nc $dir/$res/Experiment_${e}/ensemble_mean/${p}_ensmean_nh.nc
+    fi
   done

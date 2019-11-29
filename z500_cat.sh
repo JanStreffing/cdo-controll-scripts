@@ -13,6 +13,7 @@ res=$4
 var=$5
 dir=$6
 
+
 cd $dir/$res/Experiment_$e
 pwd
 echo "   ====================================================="
@@ -25,13 +26,29 @@ do
 	echo "   ====================================================="
 	rm -rf E$(printf "%03g" i)/outdata/oifs/z500_6hourly
 	mkdir E$(printf "%03g" i)/outdata/oifs/z500_6hourly
+	echo $dir/$res/Experiment_$e/E$(printf "%03g" i)/outdata/oifs/z500_6hourly
 	cd E$(printf "%03g" i)/outdata/oifs/z500_6hourly
-	
-	for x in {2..7}
-	do
-		cdo cat ../0000${x}/z500_0000${x}.nc z500_6hourly.nc
-	done
+
+	if [ $res == 'T159' ]
+	then
+		if [ $e == '11' ]
+		then
+			cdo -seltimestep,244/1703 ../00001/z500_00001.nc z500_6hourly.nc
+		else
+			for l in {1..2}
+			do
+				cdo cat ../0000${x}/z500_0000${x}.nc tmp
+			done
+			cdo -seltimestep,244/1703 tmp z500_6hourly.nc
+			rm tmp
+		fi
+	else
+		for x in {2..7}
+		do
+			printf "      Leg number ${l}\n"
+			cdo cat ../0000${x}/z500_0000${x}.nc z500_6hourly.nc
+		done
+	fi
 
 	cd ../../../..
 done
-cd .
