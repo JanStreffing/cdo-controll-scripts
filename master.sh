@@ -3,7 +3,8 @@
 start=1
 dir='/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip'
 
-for res in {T159,T511,T1279}
+#res='T159'
+for res in {T511,T1279}
 do
 	if [ $res == 'T1279' ]
 	then
@@ -14,22 +15,21 @@ do
 
 	for e in {11,16}
 	do
-		for var in z500 U MSL T2M SD SF
+		for var in T #T2M z500 MSL #U MSL T2M SD SF
 		do
 			if [ "$var" == "z500" ]
 			then
 				printf "z500_cat.sh"
 				./z500_cat.sh $e $start $end $res $var $dir
-			else
-				printf "seasmean.sh"
-				./seasmean.sh $e $start $end $res $var $dir
 			fi
+			printf "seasmean.sh"
+			./seasmean.sh $e $start $end $res $var $dir
 		done
 	done
 
 	for e in {11,16}
 	do
-		for var in z500 U MSL T2M SD SF synact NAO
+		for var in T #T2M z500 MSL #U T2M SD SF synact NAO
 		do
 			if [ "$var" == "synact" ]
 			then

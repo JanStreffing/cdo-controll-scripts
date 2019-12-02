@@ -25,15 +25,11 @@ do
 		printf "     Working on paramter ${p}\n"
 		if [ $res == 'T159' ]
 		then
-			if [ $e == '11' ]
+			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
 			then
-				cdo seasmean -seltimestep,3/14 ../00001/${p}_00001.nc ${p}_seasmean.nc
+				cdo seasmean -seltimestep,244/1703 ../00001/${p}_00001.nc ${p}_seasmean.nc
 			else
-				for l in {1..2}
-				do	
-					cdo -s cat ../$(printf "%05g" l)/${p}_$(printf "%05g" l).nc ${p}_cat.nc
-				done
-				cdo seasmean -seltimestep,3/14 ${p}_cat.nc ${p}_seasmean.nc
+                                cdo seasmean -seltimestep,3/14 ../00001/${p}_00001.nc ${p}_seasmean.nc
 			fi
 		else
 			for l in {2..7}
