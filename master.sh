@@ -15,7 +15,7 @@ do
 
 	for e in {11,16}
 	do
-		for var in T #T2M z500 MSL #U MSL T2M SD SF
+		for var in nao #T2M z500 MSL #U MSL T2M SD SF
 		do
 			if [ "$var" == "z500" ]
 			then
@@ -23,20 +23,20 @@ do
 				./z500_cat.sh $e $start $end $res $var $dir
 			fi
 			printf "seasmean.sh"
-			./seasmean.sh $e $start $end $res $var $dir
+			#./seasmean.sh $e $start $end $res $var $dir
 		done
 	done
 
 	for e in {11,16}
 	do
-		for var in T #T2M z500 MSL #U T2M SD SF synact NAO
+		for var in nao #T2M z500 MSL #U T2M SD SF synact NAO
 		do
 			if [ "$var" == "synact" ]
 			then
 				printf "synact_PAMIP.job"
 				./synact_PAMIP.job $e $start $end $res $var $dir
 				./post_data_oifs_synact_stddev.job $e $start $end $res $var $dir
-			elif [ "$var" == "NAO" ]
+			elif [ "$var" == "nao" ]
 			then
 				printf "post_data_oifs_nao.job"
 				./post_data_oifs_nao.job $e $start $end $res $var $dir
