@@ -23,6 +23,18 @@ do
 	for p in $var
 	do
 		printf "     Working on paramter ${p}\n"
+                if [ $res == 'T1279' ]
+                then
+                        if [ $var == PRECIP ] 
+                        then
+				for RUN_NUMBER_oifs in {2..7}
+				do
+					cdo chname,LSP,CP ../0000${RUN_NUMBER_oifs}/LSP_$(printf "%05d" ${RUN_NUMBER_oifs}).nc ../0000${RUN_NUMBER_oifs}/temporary_LSP.nc
+					cdo add ../0000${RUN_NUMBER_oifs}/temporary_LSP.nc ../0000${RUN_NUMBER_oifs}/CP_$(printf "%05d" ${RUN_NUMBER_oifs}).nc ../0000${RUN_NUMBER_oifs}/temporary_PRECIP.nc
+					cdo chname,CP,PRECIP ../0000${RUN_NUMBER_oifs}/temporary_PRECIP.nc ../0000${RUN_NUMBER_oifs}/PRECIP_$(printf "%05d" ${RUN_NUMBER_oifs}).nc
+				done
+			fi
+		fi
 		if [ $res == 'T159' ]
 		then
 			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
