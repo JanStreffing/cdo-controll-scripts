@@ -1,0 +1,134 @@
+#!/bin/bash
+
+set -x
+ 
+exp1=11  #$1
+res='T511' #$4
+dir='/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip' #
+
+
+path1=$dir/$res/Experiment_${exp1}/
+path2_tmp=/mnt/lustre01/work/ab0995/a270099/PAMIP/NAO/$res/Experiment_${exp1}/temp
+path2_res=/mnt/lustre01/work/ab0995/a270099/PAMIP/NAO/$res/Experiment_${exp1}/res
+
+# Select all surface pressure files
+
+for i in {1..100}
+do
+        echo "   ====================================================="
+        echo "   Selecting Experiment id $i"
+        echo "   ====================================================="
+        if [[ $res == 'T159' ]]; then
+                file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001.nc "
+        elif [[ $res == 'T511' ]]; then
+                for n in {2..7}
+                do
+                        file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/0000${n}/MSL_0000${n}.nc "
+                done
+        elif [[ $res == 'T1279' ]]; then
+                for n in {2..7}
+                do
+                        file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/0000${n}/MSL_0000${n}.nc "
+                done
+
+        fi
+done
+
+#for i in {1..100}
+#do
+#	echo "   ====================================================="
+#	echo "   Selecting Experiment id $i"
+#	echo "   ====================================================="
+#	if [ "$res" = "T159" ]; then
+#		file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001.nc "
+#	elif [ "$res" = "T511" ]; then
+#		for n in {2..7}
+#		do
+#			file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/0000${n}/MSL_0000${n}.nc "                        
+#		done
+#	elif [ "$res" = "T1279" ]; then
+#		for n in {2..7}
+#		do
+#			file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/0000${n}/MSL_0000${n}.nc "
+#		done
+#	fi
+#done
+
+# Make work dir
+mkdir -p $path2_tmp $path2_res 
+cd  $path2_tmp
+
+# Remove old output if there is any, so that we don't cat to it
+#rm -r *.nc
+FILE=MSL_hourly.nc
+
+if test -f "$FILE"
+then
+	echo "$FILE exist"
+        #printf $file_name_string
+        #cdo cat $file_name_string MSL_hourly_1.nc
+else    
+	# Cat togethers MSL data
+	printf $file_name_string
+	cdo cat $file_name_string MSL_hourly.nc
+fi
+
+# Select NAO box
+#cdo settaxis,2000-06-15,00:00,1month -monavg -sellonlatbox,-90,40,20,80 MSL_hourly.nc MSL_month_box.nc
+
+
+for seas in 'DJF' #'MAM' 'JJA' 'SON'
+do
+
+	if [ "$seas" = "DFJ" ] 
+        then
+        	smon=6
+        fi
+        if [ "$seas" = "MAM" ]
+        then
+                smon=9
+        fi
+        if [ "$seas" = "JJA" ]
+        then
+                smon=0
+        fi
+        if [ "$seas" = "SON" ]
+        then
+                smon=3
+        fi
+        
+        smon=6
+	# Select season and detrend data
+#	cdo -timselmean,3,$smon,9 MSL_month_box.nc MSL_mont_${seas}.nc
+#       cdo ymonsub MSL_mont_${seas}.nc -ymonavg MSL_mont_${seas}.nc MSL_detrend.nc
+#       cdo timmean -selseas,${seas} MSL_hourly_box.nc MSL_clim_${seas}.nc
+#	cdo sub MSL_mont_${seas}.nc MSL_clim_${seas}.nc MSL_detrend.nc
+#
+#	# Calculate EOF and select NAO
+#	cdo eof,1 MSL_detrend.nc ${path2_res}/NAO_eigenvalues_${seas}.nc ${path2_res}/NAO_eigenvector1_${seas}.nc
+#
+#        export CDO_WEIGHT_MODE=off
+#        cdo divc,100 -eofcoeff ${path2_res}/NAO_eigenvector1_${seas}.nc MSL_detrend.nc ${path2_res}/${seas}_obase
+#	# Sign coming from EOF is arbitrary but we know pressure in south is > than north.
+#	# We use this knowledge to correct the sign if necessary
+	cdo mulc,1000 -timmean -fldmean -sellonlatbox,-40,-30,30,40 ${path2_res}/NAO_eigenvector1_${seas}.nc sign.nc
+	sign=`ncdump -v MSL sign.nc | sed -e '1,/data:/d' -e '$d'`
+	sign2=${sign:7:8}
+#	if [ "$sign2" -le "0" ]
+        if [[ $(($sign2)) -le 0 ]]
+	then
+                echo 'works'
+		cdo mulc,-1 ${path2_res}/NAO_eigenvector1_${seas}.nc temp
+		mv temp ${path2_res}/NAO_eigenvector1_${seas}.nc
+	fi
+
+        export CDO_WEIGHT_MODE=off
+        cdo eofcoeff ${path2_res}/NAO_eigenvector1_${seas}.nc MSL_detrend.nc ${path2_res}/${seas}_obase
+#
+#	# Fix grid for plotting. We create a global file again where only the NAO box has values 
+#	cdo griddes $path1/E001//outdata/oifs/00001/MSL_00001.nc >grid
+#	cdo enlargegrid,grid -settaxis,2000-01-01,12:00:00,1day ${path2_res}/NAO_eigenvector1_${seas}.nc ${path2_res}/NAO_eigenvectors_${seas}.nc
+#
+done # seas
+# Clean up
+#rm -r *.nc
