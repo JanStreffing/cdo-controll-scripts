@@ -23,7 +23,11 @@ do
 	echo "   Selecting Experiment id $i"
 	echo "   ====================================================="
 	if [[ $res == 'T159' ]]; then
-		file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001.nc "
+		#file=$path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001_cut.nc
+		#if [ ! -e "$file" ]; then
+			cdo seltimestep,244/1703 $path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001.nc $path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001_cut.nc
+		#fi
+		file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001_cut.nc "
 	elif [[ $res == 'T511' ]]; then
 		for n in {2..7}
 		do
@@ -51,37 +55,45 @@ cdo cat $file_name_string MSL_hourly_all_ens.nc
 
 # Select NAO box
 cdo sellonlatbox,-90,40,20,80 MSL_hourly_all_ens.nc MSL_hourly_all_ens_box.nc
-
-# Detrend data
-cdo timmean MSL_hourly_all_ens_box.nc MSL_timmean.nc
-cdo sub MSL_hourly_all_ens_box.nc MSL_timmean.nc MSL_detrend.nc
-cdo monmean MSL_detrend.nc MSL_detrend_mon.nc
+cdo settaxis,2000-06-15,00:00,1month -monavg -sellonlatbox,-90,40,20,80 MSL_hourly_all_ens.nc MSL_month_box.nc
 
 for seas in 'DJF' 'MAM' 'JJA' 'SON'
 do
-	# Select season
-	cdo monmean -selseas,${seas} MSL_detrend.nc MSL_detrend_${seas}.nc
+
+	if [[ $seas == 'DFJ' ]]; then
+        	smon=6
+        elif [[ $seas == 'MAM' ]]; then
+                smon=9
+        elif [[ $seas == 'JJA' ]]; then
+                smon=0
+        elif [[ $seas == 'SON' ]]; then
+                smon=3
+        fi
+
+	# Select season and detrend data
+	cdo -timselmean,3,$smon,9 MSL_month_box.nc MSL_mont_${seas}.nc
+	cdo ymonsub MSL_mont_${seas}.nc -ymonavg MSL_mont_${seas}.nc MSL_detrend.nc
 
 	# Calculate EOF and select NAO
-	cdo -P 8 eof,2 MSL_detrend_${seas}.nc NAO_eigenvalues_${seas}.nc NAO_eigenvectors_${seas}.nc
-	cdo seltimestep,2 NAO_eigenvectors_${seas}.nc NAO_eigenvector2_${seas}.nc
+	cdo eof,1 MSL_detrend.nc NAO_eigenvalues_${seas}.nc NAO_eigenvector_${seas}.nc
+	cdo eofcoeff NAO_eigenvector_${seas}.nc MSL_detrend.nc ${seas}_obase
 
 	# Sign coming from EOF is arbitrary but we know pressure in south is > than north.
 	# We use this knowledge to correct the sign if necessary
-	cdo timmean -fldmean -sellonlatbox,-40,-30,30,40 NAO_eigenvector2_${seas}.nc sign_${seas}.nc
+	cdo timmean -fldmean -sellonlatbox,-40,-30,30,40 NAO_eigenvector_${seas}.nc sign_${seas}.nc
 	sign=`ncdump -v MSL sign_${seas}.nc | sed -e '1,/data:/d' -e '$d'`
 	sign2=${sign:7:9}
 	if [[ $(($sign2)) < 0 ]]
 	then
-		cdo mulc,-1 NAO_eigenvector2_${seas}.nc temp
-		mv temp NAO_eigenvector2_${seas}.nc
+		cdo mulc,-1 NAO_eigenvector_${seas}.nc temp
+		mv temp NAO_eigenvector_${seas}.nc
 	fi
 
 	# Fix grid for plotting. We create a global file again where only the NAO box has values 
 	cdo griddes $path1/E001//outdata/oifs/00001/MSL_00001.nc >grid
-	cdo enlargegrid,grid -settaxis,2000-01-01,12:00:00,1day NAO_eigenvector2_${seas}.nc NAO_eigenvector3_${seas}.nc
+	cdo enlargegrid,grid -settaxis,2000-01-01,12:00:00,1day NAO_eigenvector_${seas}.nc NAO_eigenvector3_${seas}.nc
 
 	# Clean up
-	rm sign_${seas}.nc grid NAO_eigenvector2_${seas}.nc MSL_detrend_${seas}.nc
+	#rm sign_${seas}.nc grid NAO_eigenvector_${seas}.nc MSL_detrend_${seas}.nc
 done
 
