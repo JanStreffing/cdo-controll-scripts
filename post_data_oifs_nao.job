@@ -60,7 +60,7 @@ cdo settaxis,2000-06-15,00:00,1month -monavg -sellonlatbox,-90,40,20,80 MSL_hour
 for seas in 'DJF' 'MAM' 'JJA' 'SON'
 do
 
-	if [[ $seas == 'DFJ' ]]; then
+	if [[ $seas == 'DJF' ]]; then
         	smon=6
         elif [[ $seas == 'MAM' ]]; then
                 smon=9
