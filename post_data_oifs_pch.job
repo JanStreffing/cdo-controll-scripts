@@ -1,0 +1,36 @@
+#!/bin/ksh
+#SBATCH -J NNN              # Specify job name
+#SBATCH -p esm              # Use partition prepost
+#SBATCH -N 1                # Specify number of nodes
+#SBATCH -n 1                # Specify max. number of tasks to be invoked
+#SBATCH -t 07:50:00         # Set a limit on the total run time
+#SBATCH -A chbb19           # Charge resources on this project account
+#SBATCH -o NNN.o%j          # File name for standard output
+#SBATCH -e NNN.e%j          # File name for standard error output
+
+set -exu
+
+e=$1
+start=$2
+end=$3
+res=$4
+var=$5
+dir=$6
+
+startyear=2000
+endyear=2001
+
+rm -rf $dir/$res/Experiment_${e}/polarch/
+mkdir $dir/$res/Experiment_${e}/polarch/
+cd $dir/$res/Experiment_${e}/polarch/
+
+for i in {${start}..${end}}
+do
+	if [ $res == 'T159' ]; then
+		cdo --reduce_dim mermean -zonmean -sellonlatbox,-180,180,65,90 ../E$(printf "%03g" i)/outdata/oifs/00001/6h_Z_00001.nc pch_${e}_$(printf "%03g" i).nc
+		file_name_string+="pch_${e}_$(printf "%03g" i).nc "
+
+	fi
+done
+cdo ensmean $file_name_string pch_${e}_ensmean.nc
+exit

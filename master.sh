@@ -1,16 +1,16 @@
 #!/bin/bash
 
-start=1
-dir='/mnt/lustre01/work/ba1035/a270092/runtime/oifsamip'
+start=101
+dir='/p/largedata/hhb19/jstreffi/runtime/oifsamip'
 
-#res='T159'
-for res in {T511,T1279}
-do
+res='T159'
+#for res in {T159,T511,T1279}
+#do
 	if [ $res == 'T1279' ]
 	then
 		end=40
 	else
-		end=100
+		end=300
 	fi
 
 	for e in {11,16}
@@ -29,7 +29,7 @@ do
 
 	for e in {11,16}
 	do
-		for var in nao #T2M z500 MSL #U T2M SD SF synact NAO
+		for var in pch #nao T2M z500 MSL #U T2M SD SF synact NAO
 		do
 			if [ "$var" == "synact" ]
 			then
@@ -40,6 +40,10 @@ do
 			then
 				printf "post_data_oifs_nao.job"
 				./post_data_oifs_nao.job $e $start $end $res $var $dir
+			elif [ "$var" == "pch" ]
+			then
+				printf "post_data_oifs_pch.job"
+				./post_data_oifs_pch.job $e $start $end $res $var $dir
 			else
 				printf "ensmean.sh"
 				./ensmean.sh $e $start $end $res $var $dir
@@ -48,4 +52,4 @@ do
 			
 		done
 	done
-done
+#done
