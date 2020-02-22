@@ -31,23 +31,15 @@ do
 
 	if [ $res == 'T159' ]
 	then
-		if [ $e == '11' ]
-		then
-			cdo -seltimestep,244/1703 ../00001/z500_00001.nc z500_6hourly.nc
-		else
-			for l in {1..2}
-			do
-				cdo cat ../0000${x}/z500_0000${x}.nc tmp
-			done
-			cdo -seltimestep,244/1703 tmp z500_6hourly.nc
-			rm tmp
-		fi
+		cdo -seltimestep,244/1703 ../00001/z500_00001.nc z500_6hourly.nc
 	else
-		for x in {2..7}
+		for x in {1..7}
 		do
 			printf "      Leg number ${l}\n"
-			cdo cat ../0000${x}/z500_0000${x}.nc z500_6hourly.nc
+			cdo cat ../0000${x}/z500_0000${x}.nc tmp 
 		done
+		cdo seltimestep,244/1703 -inttime,2000-04-01,06:00:00,6hour tmp z500_6hourly.nc
+		rm tmp
 	fi
 
 	cd ../../../..
