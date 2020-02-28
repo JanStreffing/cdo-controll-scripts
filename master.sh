@@ -1,21 +1,23 @@
 #!/bin/bash
 
-start=101
+start=1
 dir='/p/largedata/hhb19/jstreffi/runtime/oifsamip'
 
 res='T159'
-#for res in {T159,T511,T1279}
+#for res in {T511,T1279}
 #do
 	if [ $res == 'T1279' ]
 	then
-		end=40
-	else
+		end=60
+	elif [ $res == 'T511' ]
+		end=100
+	then
 		end=300
 	fi
 
 	for e in {11,16}
 	do
-		for var in nao #T2M z500 MSL #U MSL T2M SD SF
+		for var in Z #nao #T2M z500 MSL #U MSL T2M SD SF
 		do
 			if [ "$var" == "z500" ]
 			then
@@ -24,12 +26,13 @@ res='T159'
 			fi
 			printf "seasmean.sh"
 			#./seasmean.sh $e $start $end $res $var $dir
+			./monmean.sh $e $start $end $res $var $dir
 		done
 	done
 
 	for e in {11,16}
 	do
-		for var in pch #nao T2M z500 MSL #U T2M SD SF synact NAO
+		for var in z500 #epf #pch #nao T2M z500 MSL #U T2M SD SF synact NAO
 		do
 			if [ "$var" == "synact" ]
 			then
@@ -44,10 +47,14 @@ res='T159'
 			then
 				printf "post_data_oifs_pch.job"
 				./post_data_oifs_pch.job $e $start $end $res $var $dir
+			elif [ "$var" == "epf" ]
+			then
+				printf "epflux_cat.job"
+				./epflux_cat.job $e $start $end $res $var $dir
 			else
 				printf "ensmean.sh"
-				./ensmean.sh $e $start $end $res $var $dir
-				./split_to_seasons.sh $e $start $end $res $var $dir
+				#./ensmean.sh $e $start $end $res $var $dir
+				#./split_to_seasons.sh $e $start $end $res $var $dir
 			fi
 			
 		done
