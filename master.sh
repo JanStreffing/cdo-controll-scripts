@@ -3,15 +3,14 @@
 start=1
 dir='/p/largedata/hhb19/jstreffi/runtime/oifsamip'
 
-res='T159'
-#for res in {T511,T1279}
-#do
-	if [ $res == 'T1279' ]
-	then
-		end=60
-	elif [ $res == 'T511' ]
+#res='T159'
+for res in {T511,T1279}
+do
+	if [ $res == T1279 ]; then
 		end=100
-	then
+	elif [ $res == T511 ]; then
+		end=100
+	elif [ $res == T159 ]; then
 		end=300
 	fi
 
@@ -24,7 +23,7 @@ res='T159'
 				printf "z500_cat.sh"
 				./z500_cat.sh $e $start $end $res $var $dir
 			fi
-			printf "seasmean.sh"
+			echo $res, $start, $end
 			#./seasmean.sh $e $start $end $res $var $dir
 			./monmean.sh $e $start $end $res $var $dir
 		done
@@ -59,4 +58,4 @@ res='T159'
 			
 		done
 	done
-#done
+done

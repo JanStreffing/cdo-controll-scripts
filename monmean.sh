@@ -41,7 +41,7 @@ do
 			then
 				cdo monmean -remapcon,r320x160 -seltimestep,244/1703 -inttime,2000-04-01,06:00:00,6hour ../00001/${p}_00001.nc ${p}_monmean.nc
 			else
-                                cdo monmean -remapcon,r320x160 -seltimestep,3/14 ../00001/${p}_00001.nc ${p}_monmean.nc
+                                cdo monmean -remapcon,r320x160 -sellevel,100000,92500,85000,70000,50000,40000,30000,20000,10000,5000,1000, -seltimestep,3/14 ../00001/${p}_00001.nc ${p}_monmean.nc
 			fi
 		else
 			for l in {2..7}
@@ -49,11 +49,11 @@ do
 				printf "      Leg number ${l}\n"
 				cdo -s cat ../$(printf "%05g" l)/${p}_$(printf "%05g" l).nc ${p}_cat.nc
 			done
-			cdo monmean -remapcon,r320x160 ${p}_cat.nc ${p}_monmean.nc
+			cdo monmean -remapcon,r320x160 -sellevel,100000,92500,85000,70000,50000,40000,30000,20000,10000,5000,1000, ${p}_cat.nc ${p}_monmean.nc
 		fi
 
 
-		rm ${p}_cat.nc
+		rm -rf ${p}_cat.nc
 	done
 	pwd
 done
