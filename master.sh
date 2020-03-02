@@ -1,22 +1,22 @@
 #!/bin/bash
 
-start=1
+start=101
 dir='/p/largedata/hhb19/jstreffi/runtime/oifsamip'
 
-#res='T159'
-for res in {T511,T1279}
-do
+res='T159'
+#for res in {T511,T1279}
+#do
 	if [ $res == T1279 ]; then
-		end=100
+		end=41
 	elif [ $res == T511 ]; then
-		end=100
+		end=41
 	elif [ $res == T159 ]; then
-		end=300
+		end=103
 	fi
 
 	for e in {11,16}
 	do
-		for var in Z #nao #T2M z500 MSL #U MSL T2M SD SF
+		for var in sevf Z #nao #T2M z500 MSL #U MSL T2M SD SF
 		do
 			if [ "$var" == "z500" ]
 			then
@@ -24,8 +24,9 @@ do
 				./z500_cat.sh $e $start $end $res $var $dir
 			fi
 			echo $res, $start, $end
+			./bandpass.sh $e $start $end $res $var $dir
 			#./seasmean.sh $e $start $end $res $var $dir
-			./monmean.sh $e $start $end $res $var $dir
+			#./monmean.sh $e $start $end $res $var $dir
 		done
 	done
 
@@ -58,4 +59,4 @@ do
 			
 		done
 	done
-done
+#done
