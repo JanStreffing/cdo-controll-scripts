@@ -22,9 +22,13 @@ do
 	pwd
 	if [ $res == 'T159' ]
 	then
-		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -bandpass,182,730 ../00001/6h_V_00001.nc V_bpf &
-		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -bandpass,182,730 -chname,U,V ../00001/6h_U_00001.nc U_bpf &
+		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -P 8 -bandpass,60,242 -sellonlatbox,-180,180,0,90 -seltimestep,976/1335 ../00001/6h_VO_00001.nc VO_bpf &
+		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -P 8 -bandpass,60,242 -sellonlatbox,-180,180,0,90 -seltimestep,976/1335 ../00001/6h_V_00001.nc V_bpf &
+		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -P 8 -bandpass,60,242 -sellonlatbox,-180,180,0,90 -seltimestep,976/1335 ../00001/6h_U_00001.nc U_bpf &
 		wait
+		cdo timstd VO_bpf VO_std &
+		cdo timstd V_bpf V_std &
+		cdo timstd U_bpf U_std &
 	else
 		for RUN_NUMBER_oifs in {2..7}
 		do
@@ -33,22 +37,26 @@ do
 			cdo -s cat ../$(printf "%05g" l)/6h_U_$(printf "%05g" l).nc U_cat.nc &
 			wait
 		done
-		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -bandpass,182,730 V_cat.nc V_bpf &
-		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -bandpass,182,730 -chname,U,V U_cat.nc U_bpf &
+		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -P 8 -bandpass,182,730 -sellonlatbox,-180,180,0,90 -seltimestep,732/1091 VO_cat.nc VO_bpf &
+		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -P 8 -bandpass,182,730 -sellonlatbox,-180,180,0,90 -seltimestep,732/1091 V_cat.nc V_bpf &
+		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -P 8 -bandpass,182,730 -sellonlatbox,-180,180,0,90 -seltimestep,732/1091 U_cat.nc U_bpf &
 		wait
 	fi
 
-	cdo -sqr U_bpf U2_bpf &
-	cdo -sqr V_bpf V2_bpf &
-	wait	
-	cdo -chname,V,N -timmean -mul U_bpf V_bpf N.nc
-	cdo sub U2_bpf V2_bpf U2-V2
-	cdo -chname,V,M -timmean -divc,0.5 U2-V2 M.nc
-	cdo merge M.nc N.nc MN.nc
-	file_string+="$dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/bandpass/MN.nc "
-	rm M.nc N.nc U2-V2 U2_bpf V2_bpf U_bpf V_bpf
+	cdo -timmean -mul U_bpf VO_bpf COV_U_VO.nc
+	cdo -timmean -mul V_bpf VO_bpf COV_V_VO.nc
+	cdo merge COV_U_VO.nc COV_V_VO.nc EV.nc
+
+	cdo sqr COV_U_VO.nc COV_U_VO2.nc
+	cdo -chname,V,U -sqr COV_V_VO.nc COV_V_VO2.nc
+	cdo -sqrt -add COV_U_VO2.nc COV_V_VO2.nc Magnitude.nc
+
+	file_string+="$dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/bandpass/EV.nc "
+	#rm M.nc N.nc U2-V2 U2_bpf V2_bpf U_bpf V_bpf
 done
 
 mkdir $dir/$res/Experiment_${e}/ensemble_mean
 cd $dir/$res/Experiment_${e}/ensemble_mean
-cdo ensmean $filestring MN_ensmean.nc
+echo $file_string
+rm EV.nc
+cdo ensmean $file_string EV.nc
