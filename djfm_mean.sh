@@ -14,11 +14,12 @@ dir=$6
 for i in {${start}..${end}}
 do
 	echo "   ====================================================="
-	echo "   prep seasonal mean values for E$(printf "%03g" i)"
+	echo "   prep $var DJFM mean values for E$(printf "%03g" i)"
 	echo "   ====================================================="
 	printf $dir
-	mkdir $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/seasonal_mean
-	cd $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/seasonal_mean
+	rm -rf $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/djfm_mean
+	mkdir $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/djfm_mean
+	cd $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/djfm_mean
 	pwd
 	for p in $var
 	do
@@ -35,15 +36,13 @@ do
 				done
 			fi
 		fi
-		rm -rf ${p}_seasmean.nc
-		rm -rf ${p}_cat.nc
 		if [ $res == 'T159' ]
 		then
 			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
 			then
-				cdo seasmean -seltimestep,244/1703 -inttime,2000-04-01,06:00:00,6hour ../00001/${p}_00001.nc ${p}_seasmean.nc
+				cdo timmean -seltimestep,976/1335 ../00001/${p}_00001.nc ${p}_djfm_mean.nc
 			else
-                                cdo seasmean -seltimestep,3/14 ../00001/${p}_00001.nc ${p}_seasmean.nc
+                                cdo timmean -seltimestep,8/12 ../00001/${p}_00001.nc ${p}_djfm_mean.nc
 			fi
 		else
 			for l in {2..7}
@@ -51,14 +50,19 @@ do
 				printf "      Leg number ${l}\n"
 				cdo -s cat ../$(printf "%05g" l)/${p}_$(printf "%05g" l).nc ${p}_cat.nc
 			done
-			cdo seasmean -seltimestep,1/1459 -inttime,2000-06-01,06:00:00,6hour ${p}_cat.nc ${p}_seasmean.nc
+			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ]
+                        then
+                        	cdo timmean -seltimestep,732/1091 ${p}_cat.nc ${p}_djfm_mean.nc
+                        else
+                                cdo timmean -seltimestep,6/10 ${p}_cat.nc ${p}_djfm_mean.nc
+                        fi
 		fi
 
 
 		if [ $var == 'U' ]; then
-			cdo sellonlatbox,-180,180,0,90 ${p}_seasmean.nc ${p}_seasmean_nh.nc
+			cdo sellonlatbox,-180,180,0,90 ${p}_djfm_mean.nc ${p}_djfm_mean_nh.nc
 		fi
-		rm -rf ${p}_cat.nc last.nc tmp
+		rm ${p}_cat.nc
 	done
 	pwd
 done

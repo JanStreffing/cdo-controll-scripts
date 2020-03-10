@@ -1,9 +1,11 @@
 #!/bin/ksh
-
-for expid in {11,16}
-do
-	for i in {101..300}
+res=T1279
+expid=11
+#for expid in {11,16}
+#do
+	for i in {80..100}
 	do
-		cp -rf /p/scratch/chhb19/jstreffi/runtime/oifsamip/T159/Experiment_${expid}/E$(printf "%03d" $i)/  /p/largedata/hhb19/jstreffi/runtime/oifsamip/T159/Experiment_${expid}/E$(printf "%03d" $i)/
+		mkdir /p/largedata/hhb19/jstreffi/runtime/oifsamip/$res/Experiment_${expid}/E$(printf "%03d" $i)/
+		cp -rf /p/scratch/chhb19/jstreffi/runtime/oifsamip/$res/Experiment_${expid}/E$(printf "%03d" $i)/outdata/  /p/largedata/hhb19/jstreffi/runtime/oifsamip/$res/Experiment_${expid}/E$(printf "%03d" $i)/outdata/
 	done
-done
+#done
