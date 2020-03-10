@@ -27,9 +27,18 @@ cd $dir/$res/Experiment_${e}/polarch/
 for i in {${start}..${end}}
 do
 	if [ $res == 'T159' ]; then
-		cdo --reduce_dim mermean -zonmean -sellonlatbox,-180,180,65,90 -seltimestep,613/1092 ../E$(printf "%03g" i)/outdata/oifs/00001/6h_Z_00001.nc pch_${e}_$(printf "%03g" i).nc
-		file_name_string+="pch_${e}_$(printf "%03g" i).nc "
+		cdo --reduce_dim mermean -zonmean -sellonlatbox,-180,180,65,90 -seltimestep,613/1346 ../E$(printf "%03g" i)/outdata/oifs/00001/6h_Z_00001.nc pch_${e}_$(printf "%03g" i).nc
+	else
+		for l in {4..7}
+		do
+			printf "      Leg number ${l}\n"
+			cdo -s cat ../E$(printf "%03g" i)/outdata/oifs/$(printf "%05g" l)/6h_Z_$(printf "%05g" l).nc 6h_Z_cat.nc
+		done
+		
+		cdo --reduce_dim mermean -zonmean -sellonlatbox,-180,180,65,90 -seltimestep,125/849 6h_Z_cat.nc pch_${e}_$(printf "%03g" i).nc
+		rm 6h_Z_cat.nc
 	fi
+	file_name_string+="pch_${e}_$(printf "%03g" i).nc "
 done
 cdo ensmean $file_name_string pch_${e}_ensmean.nc
 exit
