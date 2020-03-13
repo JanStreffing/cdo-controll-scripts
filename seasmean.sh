@@ -51,7 +51,12 @@ do
 				printf "      Leg number ${l}\n"
 				cdo -s cat ../$(printf "%05g" l)/${p}_$(printf "%05g" l).nc ${p}_cat.nc
 			done
-			cdo seasmean -seltimestep,1/1459 -inttime,2000-06-01,06:00:00,6hour ${p}_cat.nc ${p}_seasmean.nc
+			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
+			then
+				cdo seasmean -seltimestep,1/1459 -inttime,2000-06-01,06:00:00,6hour ${p}_cat.nc ${p}_seasmean.nc
+			else
+				cdo seasmean ${p}_cat.nc ${p}_seasmean.nc
+			fi
 		fi
 
 

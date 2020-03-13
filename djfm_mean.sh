@@ -17,12 +17,12 @@ do
 	echo "   prep $var DJFM mean values for E$(printf "%03g" i)"
 	echo "   ====================================================="
 	printf $dir
-	rm -rf $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/djfm_mean
 	mkdir $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/djfm_mean
 	cd $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/djfm_mean
 	pwd
 	for p in $var
 	do
+		rm -rf ${p}_djfm_mean.nc ${p}_cat.nc
 		printf "     Working on paramter ${p}\n"
                 if [ $res == 'T1279' ]
                 then
@@ -40,9 +40,9 @@ do
 		then
 			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
 			then
-				cdo timmean -seltimestep,976/1335 ../00001/${p}_00001.nc ${p}_djfm_mean.nc
+				cdo timmean -remapcon,r320x160 -seltimestep,976/1335 ../00001/${p}_00001.nc ${p}_djfm_mean.nc
 			else
-                                cdo timmean -seltimestep,8/12 ../00001/${p}_00001.nc ${p}_djfm_mean.nc
+                                cdo timmean -remapcon,r320x160 -seltimestep,8/12 ../00001/${p}_00001.nc ${p}_djfm_mean.nc
 			fi
 		else
 			for l in {2..7}
@@ -52,12 +52,16 @@ do
 			done
 			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ]
                         then
-                        	cdo timmean -seltimestep,732/1091 ${p}_cat.nc ${p}_djfm_mean.nc
+                        	cdo timmean -remapcon,r320x160 -seltimestep,732/1091 ${p}_cat.nc ${p}_djfm_mean.nc
                         else
-                                cdo timmean -seltimestep,6/10 ${p}_cat.nc ${p}_djfm_mean.nc
+                                cdo timmean -remapcon,r320x160 -seltimestep,6/10 ${p}_cat.nc ${p}_djfm_mean.nc
                         fi
 		fi
-
+		if [ $res == 'T1279' ]
+		then
+			cdo -remapcon,r320x160 ${p}_djfm_mean.nc tmp
+			mv tmp ${p}_djfm_mean.nc
+		fi
 
 		if [ $var == 'U' ]; then
 			cdo sellonlatbox,-180,180,0,90 ${p}_djfm_mean.nc ${p}_djfm_mean_nh.nc

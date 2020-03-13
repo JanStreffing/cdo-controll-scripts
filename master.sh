@@ -9,16 +9,16 @@ res='T1279'
 		start=1
 		end=100
 	elif [ $res == T511 ]; then
-		start=101
+		start=1
 		end=200
 	elif [ $res == T159 ]; then
-		start=101
+		start=1
 		end=300
 	fi
 
 	for e in {11,16}
 	do
-		for var in T2M #nao
+		for var in T2M #Z U T T2M V SD SF #U V T SD SF #U #Z SD SF #nao
 		do
 			if [ "$var" == "z500" ]
 			then
@@ -30,12 +30,14 @@ res='T1279'
 			#./djfm_mean.sh $e $start $end $res $var $dir
 			#./monmean.sh $e $start $end $res $var $dir
 			./seasmean.sh $e $start $end $res $var $dir
+			#./fix_monthly.sh $e $start $end $res $var $dir
+			#./fix_layers.sh $e $start $end $res $var $dir
 		done
 	done
 
 	for e in {11,16}
 	do
-		for var in T2M #epf #pch #nao T2M z500 MSL #U T2M SD SF synact NAO
+		for var in T2M #T #epf #pch #nao T2M z500 MSL #U T2M SD SF synact NAO
 		do
 			if [ "$var" == "synact" ]
 			then
@@ -57,7 +59,7 @@ res='T1279'
 			else
 				printf "ensmean.sh"
 				./ensmean.sh $e $start $end $res $var $dir
-				#./split_to_seasons.sh $e $start $end $res $var $dir
+				./split_to_seasons.sh $e $start $end $res $var $dir
 			fi
 			
 		done
