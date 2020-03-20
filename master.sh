@@ -3,8 +3,8 @@
 dir='/p/largedata/hhb19/jstreffi/runtime/oifsamip'
 
 res='T159'
-#for res in {T511,T1279}
-#do
+for res in {T511,T1279}
+do
 	if [ $res == T1279 ]; then
 		start=1
 		end=100
@@ -18,7 +18,7 @@ res='T159'
 
 	for e in {11,16}
 	do
-		for var in T2M #T2M #Z U T T2M V SD SF #U V T SD SF #U #Z SD SF #nao
+		for var in SF #T2M #Z U T T2M V SD SF #U V T SD SF #U #Z SD SF #nao
 		do
 			if [ "$var" == "z500" ]
 			then
@@ -27,15 +27,16 @@ res='T159'
 			fi
 			echo $res, $start, $end
 			#./bandpass.sh $e $start $end $res $var $dir
-			#./djfm_mean.sh $e $start $end $res $var $dir
+			#./djfm_mean_11.sh $e $start $end $res $var $dir
 			#./monmean.sh $e $start $end $res $var $dir
+			#./monmean_mid_lat.sh $e $start $end $res $var $dir
 			#./seasmean.sh $e $start $end $res $var $dir
 			#./extreme.sh $e $start $end $res $var $dir
 			./forcing_part1.sh $e $start $end $res $var $dir
 			#./fix_monthly.sh $e $start $end $res $var $dir
 			#./fix_layers.sh $e $start $end $res $var $dir
 		done
-		./forcing_part2.sh $e $start $end $res placeholder $dir
+		#./forcing_part2.sh $e $start $end $res placeholder $dir
 	done
 
 	for e in {11,16}
@@ -67,4 +68,4 @@ res='T159'
 			
 		done
 	done
-#done
+done
