@@ -24,18 +24,6 @@ do
 	do
 		rm -rf ${p}_djfm_mean.nc ${p}_cat.nc
 		printf "     Working on paramter ${p}\n"
-                if [ $res == 'T1279' ]
-                then
-                        if [ $var == PRECIP ] 
-                        then
-				for RUN_NUMBER_oifs in {2..7}
-				do
-					cdo chname,LSP,CP ../0000${RUN_NUMBER_oifs}/LSP_$(printf "%05d" ${RUN_NUMBER_oifs}).nc ../0000${RUN_NUMBER_oifs}/temporary_LSP.nc
-					cdo add ../0000${RUN_NUMBER_oifs}/temporary_LSP.nc ../0000${RUN_NUMBER_oifs}/CP_$(printf "%05d" ${RUN_NUMBER_oifs}).nc ../0000${RUN_NUMBER_oifs}/temporary_PRECIP.nc
-					cdo chname,CP,PRECIP ../0000${RUN_NUMBER_oifs}/temporary_PRECIP.nc ../0000${RUN_NUMBER_oifs}/PRECIP_$(printf "%05d" ${RUN_NUMBER_oifs}).nc
-				done
-			fi
-		fi
 		if [ $res == 'T159' ]
 		then
 			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
@@ -62,7 +50,7 @@ do
 			cdo -remapcon,r320x160 ${p}_djfm_mean.nc tmp
 			mv tmp ${p}_djfm_mean.nc
 		fi
-
+		cdo sellevel,100000,92500,85000,70000,50000,40000,30000,20000,10000,5000,1000 ${p}_djfm_mean.nc ${p}_djfm_mean_11.nc
 		if [ $var == 'U' ]; then
 			cdo sellonlatbox,-180,180,0,90 ${p}_djfm_mean.nc ${p}_djfm_mean_nh.nc
 		fi
