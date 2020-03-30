@@ -33,12 +33,13 @@ do
 	then
 		cdo -seltimestep,244/1703 ../00001/z500_00001.nc z500_6hourly.nc
 	else
-		for x in {1..7}
+		rm -rf tmp
+		for x in {2..7}
 		do
 			printf "      Leg number ${l}\n"
 			cdo cat ../0000${x}/z500_0000${x}.nc tmp 
 		done
-		cdo seltimestep,244/1703 -inttime,2000-04-01,06:00:00,6hour tmp z500_6hourly.nc
+		cdo -inttime,2000-06-01,06:00:00,6hour tmp z500_6hourly.nc
 		rm tmp
 	fi
 
