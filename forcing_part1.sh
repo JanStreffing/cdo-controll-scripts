@@ -37,10 +37,19 @@ do
 				printf "      Leg number ${l}\n"
 				cdo -s cat ../$(printf "%05g" l)/${p}_$(printf "%05g" l).nc ${p}_cat.nc
 			done
-			cdo monmean -seltimestep,1/1459 -inttime,2000-06-01,06:00:00,6hour -remapcon,r320x160 ${p}_cat.nc ${p}_monmean.nc
+                        if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ]
+			then
+				cdo monmean -seltimestep,1/1459 -inttime,2000-06-01,06:00:00,6hour -remapcon,r320x160 ${p}_cat.nc ${p}_monmean.nc
+			else
+				cdo monmean -remapcon,r320x160 ${p}_cat.nc ${p}_monmean.nc
+			fi
 		fi
-		cdo -sellonlatbox,-180,180,0,90 -ifthen /p/project/chhb19/jstreffi/obs/hadisst2/sic_march_mask.nc ${p}_monmean.nc ${p}_monmean_masked.nc
-		
+		if [ $var == SF ]
+		then
+			cdo -mulc,334000 -sellonlatbox,-180,180,0,90 -ifthen /p/project/chhb19/jstreffi/obs/hadisst2/sic_march_mask.nc ${p}_monmean.nc ${p}_monmean_masked.nc 
+		else
+			cdo -sellonlatbox,-180,180,0,90 -ifthen /p/project/chhb19/jstreffi/obs/hadisst2/sic_march_mask.nc ${p}_monmean.nc ${p}_monmean_masked.nc
+		fi	
 		rm -rf ${p}_cat.nc ${p}_monmean.nc
 
 	done
