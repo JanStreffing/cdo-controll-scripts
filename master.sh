@@ -3,22 +3,22 @@
 dir='/p/largedata/hhb19/jstreffi/runtime/oifsamip'
 
 res='T159'
-for res in {T511,T1279}
+for res in {T159,T511,T1279}
 do
 	if [ $res == T1279 ]; then
-		start=61
+		start=1
 		end=100
 	elif [ $res == T511 ]; then
-		start=101
+		start=1
 		end=200
 	elif [ $res == T159 ]; then
-		start=101
+		start=1
 		end=300
 	fi
 	
 	for e in {11,16}
 	do
-		for var in PRECIP #T2M #Z U T T2M V SD SF #U V T SD SF #U #Z SD SF #nao
+		for var in placeholder #Z U T T2M V SD SF #U V T SD SF #U #Z SD SF #nao
 		do
 			if [ "$var" == "z500" ]
 			then
@@ -41,10 +41,11 @@ do
 			#./monmean.sh $e $start $end $res $var $dir
 			#./monmean_mid_lat.sh $e $start $end $res $var $dir
 			#./seasmean.sh $e $start $end $res $var $dir
-			#./extreme.sh $e $start $end $res $var $dir
 			#./forcing_part1.sh $e $start $end $res $var $dir
 			#./fix_monthly.sh $e $start $end $res $var $dir
 			#./fix_layers.sh $e $start $end $res $var $dir
+			#./MiLES_prep.sh $e $start $end $res $var $dir
+			./MiLES_exec.sh $e $start $end $res $var $dir
 		done
 		#./forcing_part2.sh $e $start $end $res placeholder $dir
 	done
