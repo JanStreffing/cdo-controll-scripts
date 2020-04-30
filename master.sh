@@ -2,23 +2,24 @@
 
 dir='/p/largedata/hhb19/jstreffi/runtime/oifsamip'
 
-res='T159'
-for res in {T159,T511,T1279}
-do
+res='T511'
+#for res in {T159,T511,T1279}
+#do
 	if [ $res == T1279 ]; then
-		start=1
+		start=61
 		end=100
 	elif [ $res == T511 ]; then
-		start=1
-		end=200
+		start=006
+		end=006
 	elif [ $res == T159 ]; then
-		start=1
+		start=101
 		end=300
 	fi
 	
-	for e in {11,16}
-	do
-		for var in placeholder #Z U T T2M V SD SF #U V T SD SF #U #Z SD SF #nao
+	e=11
+	#for e in {11,16}
+	#do
+		for var in a #z500 #Z U T T2M V SD SF #U V T SD SF #U #Z SD SF #nao
 		do
 			if [ "$var" == "z500" ]
 			then
@@ -44,21 +45,19 @@ do
 			#./forcing_part1.sh $e $start $end $res $var $dir
 			#./fix_monthly.sh $e $start $end $res $var $dir
 			#./fix_layers.sh $e $start $end $res $var $dir
-			#./MiLES_prep.sh $e $start $end $res $var $dir
-			./MiLES_exec.sh $e $start $end $res $var $dir
 		done
 		#./forcing_part2.sh $e $start $end $res placeholder $dir
-	done
+	#done
 
-	for e in {11,16}
-	do
-		for var in p #synact #epf #pch #nao T2M z500 MSL #U T2M SD SF synact NAO
+	#for e in {11,16}
+	#do
+		for var in a #synact #epf #pch #nao T2M z500 MSL #U T2M SD SF synact NAO
 		do
 			if [ "$var" == "synact" ]
 			then
 				printf "synact_PAMIP.job"
 				./synact_PAMIP.job $e $start $end $res $var $dir
-				./post_data_oifs_synact_stddev.job $e $start $end $res $var $dir
+				#./post_data_oifs_synact_stddev.job $e $start $end $res $var $dir
 			elif [ "$var" == "nao" ]
 			then
 				printf "post_data_oifs_nao.job"
@@ -73,10 +72,12 @@ do
 				./epflux_cat.job $e $start $end $res $var $dir
 			else
 				printf "ensmean.sh"
-				#./ensmean.sh $e $start $end $res $var $dir
-				#./split_to_seasons.sh $e $start $end $res $var $dir
+			#./ensmean.sh $e $start $end $res $var $dir
+			#./split_to_seasons.sh $e $start $end $res $var $dir
 			fi
-			
+		#./sinuosity2.job $e $start $end $res $var $dir
+		./MiLES_prep.sh $e $start $end $res $var $dir
+		./MiLES_exec.sh $e $start $end $res $var $dir
 		done
-	done
-done
+	#done
+#done

@@ -8,3 +8,4 @@ slurm-*
 *~
 .Rhistory
 *.swp
+*.out
