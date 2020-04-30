@@ -16,10 +16,15 @@ do
 	echo "   ====================================================="
 	echo "   prep E$(printf "%03g" i) for MiLES blocking analysis "
 	echo "   ====================================================="
-	printf $dir
 	cd $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/z500_6hourly
 	pwd
-	cdo sellonlatbox,0,360,0,90 -remapbil,r144x73 -setname,zg -setunit,Pa z500_$(printf "%03g" ${i})_daily.nc zg50000_${res}_$(printf "%03g" ${i})_${e}_fullfile.nc
+	rm zg50000_${res}_$(printf "%03g" ${i})_${e}_fullfile.nc
+	cdo sellonlatbox,0,360,0,90 -remapbil,r144x73 -setname,zg -setunit,Pa z500_$(printf "%03g" ${i})_daily.nc temp2
+	cdo seltimestep,1/214 temp2 1
+	cdo seltimestep,215/365 temp2 2
+	cdo -settaxis,2001-06-01,09:00:00,1day 1 3
+	cdo cat 2 3 zg50000_${res}_$(printf "%03g" ${i})_${e}_fullfile.nc
+	rm -f temp1 temp2 1 2 3
 	mkdir  /p/largedata/hhb19/jstreffi/runtime/oifsamip/MILES/data/zg50000/${res}_$(printf "%03g" ${i})/
 	mkdir  /p/largedata/hhb19/jstreffi/runtime/oifsamip/MILES/data/zg50000/${res}_$(printf "%03g" ${i})/${e}/
 	ln -s $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/z500_6hourly/zg50000_${res}_$(printf "%03g" ${i})_${e}_fullfile.nc /p/largedata/hhb19/jstreffi/runtime/oifsamip/MILES/data/zg50000/${res}_$(printf "%03g" ${i})/${e}/zg50000_${res}_$(printf "%03g" ${i})_${e}_fullfile.nc
