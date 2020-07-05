@@ -42,7 +42,8 @@ do
 	then
 		cdo -$operator -sellonlatbox,-180,180,75,90 -seltimestep,916/1519 ../00001/HR_${var}_00001.nc HR_${var}_NP.nc
 		cdo -$operator -sellonlatbox,-180,180,30,60 -seltimestep,916/1519 ../00001/HR_${var}_00001.nc HR_${var}_NH.nc
-		cdo -$operator -sellonlatbox,0,135,30,60 -seltimestep,916/1519 ../00001/HR_${var}_00001.nc HR_${var}_EA.nc
+		cdo -$operator -sellonlatbox,0,60,30,60 -seltimestep,916/1519 ../00001/HR_${var}_00001.nc HR_${var}_EU.nc
+		cdo -$operator -sellonlatbox,60,120,30,60 -seltimestep,916/1519 ../00001/HR_${var}_00001.nc HR_${var}_AS.nc
 		cdo -$operator -sellonlatbox,-120,-60,30,60 -seltimestep,916/1519 ../00001/HR_${var}_00001.nc HR_${var}_NA.nc
 	else
 		rm -rf tmp
@@ -51,10 +52,11 @@ do
 			printf "      Leg number ${l}\n"
 			cdo cat ../0000${x}/HR_${var}_0000${x}.nc tmp 
 		done
-		cdo seltimestep,47/197 -$operator -sellonlatbox,-180,180,75,90  -inttime,2000-10-01,06:00:00,6hour tmp HR_${var}_NP.nc
-		cdo seltimestep,47/197 -$operator -sellonlatbox,-180,180,30,60  -inttime,2000-10-01,06:00:00,6hour tmp HR_${var}_NH.nc
-		cdo seltimestep,47/197 -$operator -sellonlatbox,0,135,30,60  -inttime,2000-10-01,06:00:00,6hour tmp HR_${var}_EA.nc
-		cdo seltimestep,47/197 -$operator -sellonlatbox,-120,-60,30,60  -inttime,2000-10-01,06:00:00,6hour tmp HR_${var}_NA.nc
+		#cdo seltimestep,47/197 -$operator -sellonlatbox,-180,180,75,90  -inttime,2000-10-01,06:00:00,6hour tmp HR_${var}_NP.nc
+		#cdo seltimestep,47/197 -$operator -sellonlatbox,-180,180,30,60  -inttime,2000-10-01,06:00:00,6hour tmp HR_${var}_NH.nc
+		cdo seltimestep,47/197 -$operator -sellonlatbox,0,65,30,60  -inttime,2000-10-01,06:00:00,6hour tmp HR_${var}_EU.nc
+		cdo seltimestep,47/197 -$operator -sellonlatbox,65,130,30,60  -inttime,2000-10-01,06:00:00,6hour tmp HR_${var}_AS.nc
+		#cdo seltimestep,47/197 -$operator -sellonlatbox,-125,-60,30,60  -inttime,2000-10-01,06:00:00,6hour tmp HR_${var}_NA.nc
 		rm tmp
 	fi
 

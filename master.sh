@@ -2,24 +2,24 @@
 
 dir='/p/largedata/hhb19/jstreffi/runtime/oifsamip'
 
-res='T511'
+res='T159'
 #for res in {T159,T511,T1279}
 #do
 	if [ $res == T1279 ]; then
-		start=61
+		start=41
 		end=100
 	elif [ $res == T511 ]; then
-		start=006
-		end=006
-	elif [ $res == T159 ]; then
 		start=101
-		end=300
+		end=200
+	elif [ $res == T159 ]; then
+		start=301
+		end=600
 	fi
 	
-	e=11
+	e=16
 	#for e in {11,16}
 	#do
-		for var in a #z500 #Z U T T2M V SD SF #U V T SD SF #U #Z SD SF #nao
+		for var in place #MSL U T z500 Z T2M V #nao
 		do
 			if [ "$var" == "z500" ]
 			then
@@ -38,7 +38,7 @@ res='T511'
 			fi
 			echo $res, $start, $end
 			#./bandpass.sh $e $start $end $res $var $dir
-			#./djfm_mean_11.sh $e $start $end $res $var $dir
+			#./djfm_mean.sh $e $start $end $res $var $dir
 			#./monmean.sh $e $start $end $res $var $dir
 			#./monmean_mid_lat.sh $e $start $end $res $var $dir
 			#./seasmean.sh $e $start $end $res $var $dir
@@ -47,11 +47,12 @@ res='T511'
 			#./fix_layers.sh $e $start $end $res $var $dir
 		done
 		#./forcing_part2.sh $e $start $end $res placeholder $dir
+                #./forrosie2.sh  $e $start $end $res $var $dir
 	#done
 
-	#for e in {11,16}
-	#do
-		for var in a #synact #epf #pch #nao T2M z500 MSL #U T2M SD SF synact NAO
+#	for e in {11,16}
+#	do
+		for var in place #synact #U T T2M z500 MSL #epf #pch #nao T2M z500 MSL #U T2M SD SF synact NAO
 		do
 			if [ "$var" == "synact" ]
 			then
@@ -75,9 +76,11 @@ res='T511'
 			#./ensmean.sh $e $start $end $res $var $dir
 			#./split_to_seasons.sh $e $start $end $res $var $dir
 			fi
-		#./sinuosity2.job $e $start $end $res $var $dir
-		./MiLES_prep.sh $e $start $end $res $var $dir
-		./MiLES_exec.sh $e $start $end $res $var $dir
+		#./sevf_resfix.sh  $e $start $end $res $var $dir
 		done
-	#done
+	#./sinuosity2.job $e $start $end $res $var $dir
+	#./MiLES_prep.sh $e $start $end $res $var $dir
+	./MiLES_exec_b.sh $e $start $end $res $var $dir
+	./blocking_mean.job  $e $start $end $res $var $dir
+#	done
 #done

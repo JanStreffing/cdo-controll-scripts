@@ -17,7 +17,7 @@ do
     cdo daymean 3D_$(printf "%03g" i)_6hourly.nc z500_$(printf "%03g" i)_daily.nc
     ncatted -a calendar,time,o,c,"standard" z500_$(printf "%03g" i)_daily.nc
     cd /p/project/chhb19/jstreffi/software/APPLICATE2/sinuosity
-    ./sinuosity ${dir}/${res}/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/z500_6hourly//z500_$(printf "%03g" i)_daily.nc ${dir}/${res}/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/z500_6hourly/$(printf "%03g" i)/../sinuosity
+    ./sinuosity ${dir}/${res}/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/z500_6hourly//z500_$(printf "%03g" i)_daily.nc ${dir}/${res}/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/z500_6hourly/sinuosity
 done
 exit 0
 

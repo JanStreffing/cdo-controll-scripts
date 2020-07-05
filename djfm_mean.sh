@@ -54,7 +54,7 @@ do
 		if [ $var == 'U' ]; then
 			cdo sellonlatbox,-180,180,0,90 ${p}_djfm_mean.nc ${p}_djfm_mean_nh.nc
 		fi
-		rm ${p}_cat.nc
+		rm -rf ${p}_cat.nc
 	done
 	pwd
 done
