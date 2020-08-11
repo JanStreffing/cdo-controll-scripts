@@ -24,7 +24,7 @@ do
 	do
 		rm -rf ${p}_djfm_mean.nc ${p}_cat.nc
 		printf "     Working on paramter ${p}\n"
-		if [ $res == 'T159' ]
+		if [[ $res == 'T159' || $res == 'T511' ]]
 		then
 			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
 			then
@@ -50,7 +50,7 @@ do
 			cdo -remapcon,r320x160 ${p}_djfm_mean.nc tmp
 			mv tmp ${p}_djfm_mean.nc
 		fi
-		cdo sellevel,100000,92500,85000,70000,50000,40000,30000,20000,10000,5000,1000 ${p}_djfm_mean.nc ${p}_djfm_mean_11.nc
+		#cdo sellevel,100000,92500,85000,70000,50000,40000,30000,20000,10000,5000,1000 ${p}_djfm_mean.nc ${p}_djfm_mean_11.nc
 		if [ $var == 'U' ]; then
 			cdo sellonlatbox,-180,180,0,90 ${p}_djfm_mean.nc ${p}_djfm_mean_nh.nc
 		fi

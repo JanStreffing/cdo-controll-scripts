@@ -20,7 +20,7 @@ do
 	mkdir $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/bandpass
 	cd $dir/$res/Experiment_${e}/E$(printf "%03g" i)/outdata/oifs/bandpass
 	pwd
-	if [ $res == 'T159' ]
+	if [[ $res == 'T159' || $res == 'T511' ]]
 	then
 		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -P 8 -sellonlatbox,-180,180,0,90 -seltimestep,697/1244 ../00001/6h_VO_00001.nc VO_bpf_prep &
 		/p/project/chhb19/jstreffi/software/miniconda3/envs/pyn_env_py2/bin/cdo -P 8 -sellonlatbox,-180,180,0,90 -seltimestep,697/1244 ../00001/6h_V_00001.nc V_bpf_prep &

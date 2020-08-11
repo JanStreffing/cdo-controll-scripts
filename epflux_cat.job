@@ -23,7 +23,7 @@ pwd
 
 for i in {${start}..${end}}
 do
-	if [ $res == 'T159' ]
+	if [[ $res == 'T159' || $res == 'T511' ]]
 	then
 		cdo -seltimestep,3/14 ../E$(printf "%03g" i)/outdata/oifs/00001/epf_00001.nc epf_${e}_$(printf "%03g" i).nc
 	else

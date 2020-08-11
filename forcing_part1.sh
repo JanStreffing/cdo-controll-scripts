@@ -23,7 +23,7 @@ do
 	do
 		rm -rf ${p}_cat.nc
 		printf "     Working on paramter ${p}\n"
-		if [ $res == 'T159' ]
+		if [[ $res == 'T159' || $res == 'T511' ]]
 		then
 			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
 			then

@@ -35,13 +35,14 @@ do
 				done
 			fi
 		fi
-		if [ $res == 'T159' ]
+		if [[ $res == 'T159' || $res == 'T511' ]]
 		then
 			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
 			then
 				cdo monmean  -sellonlatbox,-180,180,30,70 -remapcon,r320x160 -seltimestep,976/1459 -inttime,2000-04-01,06:00:00,6hour ../00001/${p}_00001.nc ${p}_monmean.nc
 			else
-                                cdo monmean  -sellonlatbox,-180,180,30,70 -remapcon,r320x160 -sellevel,100000,92500,85000,70000,50000,40000,30000,20000,10000,5000,1000, -seltimestep,9/12 ../00001/${p}_00001.nc ${p}_monmean.nc
+                                cdo monmean  -sellonlatbox,-180,180,30,70 -remapcon,r320x160 -seltimestep,9/12 ../00001/${p}_00001.nc ${p}_monmean.nc
+                                #cdo monmean  -sellonlatbox,-180,180,30,70 -remapcon,r320x160 -sellevel,100000,92500,85000,70000,50000,40000,30000,20000,10000,5000,1000, -seltimestep,9/12 ../00001/${p}_00001.nc ${p}_monmean.nc
 			fi
 		else
 			for l in {2..7}
@@ -53,7 +54,8 @@ do
 			then
 				cdo monmean  -sellonlatbox,-180,180,30,70 -remapcon,r320x160 -seltimestep,732/1215 -inttime,2000-06-01,06:00:00,6hour ${p}_cat.nc ${p}_monmean.nc
 			else
-				cdo monmean  -sellonlatbox,-180,180,30,70 -remapcon,r320x160 -sellevel,100000,92500,85000,70000,50000,40000,30000,20000,10000,5000,1000, -seltimestep,7/10 ${p}_cat.nc ${p}_monmean.nc
+				cdo monmean  -sellonlatbox,-180,180,30,70 -remapcon,r320x160 -seltimestep,7/10 ${p}_cat.nc ${p}_monmean.nc
+				#cdo monmean  -sellonlatbox,-180,180,30,70 -remapcon,r320x160 -sellevel,100000,92500,85000,70000,50000,40000,30000,20000,10000,5000,1000, -seltimestep,7/10 ${p}_cat.nc ${p}_monmean.nc
 			fi
 		fi
 

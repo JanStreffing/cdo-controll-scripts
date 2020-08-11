@@ -13,8 +13,8 @@ dir=$6
 
 for i in {${start}..${end}}
 do
-	filelist+="/p/largedata/hhb19/jstreffi/runtime/oifsamip/MILES/files/Block/${res}_$(printf "%03g" ${i})/${e}/2001_2001/DJFM/D12_Clim_${res}_$(printf "%03g" ${i})_${e}_2001_2001_DJFM.nc "
+	filelist+="$dir/MILES/files/Block/${res}_$(printf "%03g" ${i})/${e}/2001_2001/DJFM/D12_Clim_${res}_$(printf "%03g" ${i})_${e}_2001_2001_DJFM.nc "
 done
-cd /p/largedata/hhb19/jstreffi/runtime/oifsamip/MILES/files/Block
+cd $dir/MILES/files/Block
 cdo ensmean $filelist D12_Clim_T${res}_ensmean_${e}_2001_2001_DJFM.nc
 

@@ -22,17 +22,12 @@ do
 	echo "   ====================================================="
 	echo "   Selecting Experiment id $i"
 	echo "   ====================================================="
-	if [[ $res == 'T159' ]]; then
+	if [[ $res == 'T159' || $res == 'T511' ]]; then
 		#file=$path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001_cut.nc
 		#if [ ! -e "$file" ]; then
 			cdo seltimestep,244/1703 $path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001.nc $path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001_cut.nc
 		#fi
 		file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/00001/MSL_00001_cut.nc "
-	elif [[ $res == 'T511' ]]; then
-		for n in {2..7}
-		do
-			file_name_string+="$path1/E$(printf "%03g" $i)/outdata/oifs/0000${n}/MSL_0000${n}.nc "
-		done
 	elif [[ $res == 'T1279' ]]; then
 		for n in {2..7}
 		do

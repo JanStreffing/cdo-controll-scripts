@@ -37,7 +37,7 @@ do
 		fi
 		rm -rf ${p}_seasmean.nc
 		rm -rf ${p}_cat.nc
-		if [ $res == 'T159' ]
+		if [[ $res == 'T159' || $res == 'T511' ]]
 		then
 			if [ $var == T2M ] ||  [ $var == MSL ] || [ $var == z500 ] 
 			then

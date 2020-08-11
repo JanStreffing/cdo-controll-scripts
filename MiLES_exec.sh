@@ -16,7 +16,7 @@ do
 	echo "   ====================================================="
 	echo "   exec E$(printf "%03g" i) for MiLES blocking analysis "
 	echo "   ====================================================="
-	cd /p/project/chhb19/jstreffi/software/MiLES_b
+	cd /p/project/chhb19/jstreffi/software/MiLES
 	./wrapper_miles.sh namelist/namelist.tmpl ${res} $(printf "%03g" ${i}) ${e}
 done
 

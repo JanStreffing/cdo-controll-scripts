@@ -29,7 +29,7 @@ do
 	echo $dir/$res/Experiment_$e/E$(printf "%03g" i)/outdata/oifs/z500_6hourly
 	cd E$(printf "%03g" i)/outdata/oifs/z500_6hourly
 
-	if [ $res == 'T159' ]
+	if [[ $res == 'T159' || $res == 'T511' ]]
 	then
 		cdo -seltimestep,244/1703 ../00001/z500_00001.nc z500_6hourly.nc
 	else
